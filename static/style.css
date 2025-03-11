@@ -8,7 +8,6 @@ body {
     height: 100vh; /* Garante que o fundo ocupe toda a altura da janela */
 }
 
-
 .container {
     display: flex;
     justify-content: space-between;
