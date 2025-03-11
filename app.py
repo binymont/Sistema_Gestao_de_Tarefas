@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for
 from models import db, Task
 from datetime import datetime
+import os  # Importando o módulo 'os' para acessar variáveis de ambiente
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///tasks.db'
@@ -55,4 +56,6 @@ def update_task(id):
     return redirect(url_for('task_detail', task_id=task.id))
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    # Configurando o Flask para escutar no PORT fornecido pelo Heroku
+    port = int(os.environ.get('PORT', 5000))  # Pega a variável de ambiente 'PORT', ou usa 5000 se não estiver definida
+    app.run(host='0.0.0.0', port=port, debug=True)  # O host deve ser '0.0.0.0' para aceitar conexões externas
