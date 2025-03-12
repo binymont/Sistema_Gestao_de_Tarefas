@@ -1,1 +1,2 @@
-# Sistema_Gestao_de_Tarefas
+# Projeto de Ptática Profissional em ADS 
+## Grupo 9: Sistema Gestao de Tarefas
