@@ -1,2 +1,2 @@
-# Projeto de Ptática Profissional em ADS 
+# Projeto de Prática Profissional em ADS 
 ## Grupo 9: Sistema Gestao de Tarefas
