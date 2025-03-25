@@ -8,7 +8,8 @@ class Task(db.Model):
     description = db.Column(db.String(500))
     due_date = db.Column(db.Date)
     priority = db.Column(db.String(50))
-    status = db.Column(db.String(50), default='Pendente')
+    status = db.Column(db.String(50), default='todo')  # ← mantemos essa
+    completed = db.Column(db.Boolean, default=False)
 
     def __repr__(self):
         return f"<Task {self.title}>"

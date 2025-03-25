@@ -1,55 +1,106 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestão de Tarefas</title>
+    <title>Gestão de Tarefas - Kanban</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        button {
+            padding: 8px 16px;
+            font-size: 14px;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
-        <!-- Formulário de cadastro -->
-        <div class="form-container">
-            <h1>Cadastro de Tarefas</h1>
-            <form action="/add" method="POST">
-                <input type="text" name="title" placeholder="Título" required>
-                <input type="text" name="description" placeholder="Descrição">
-                <input type="date" name="due_date" required>
-                <input type="text" name="priority" placeholder="Prioridade" required>
-                <button type="submit">Adicionar Tarefa</button>
-            </form>
+        <h1>Quadro de Tarefas</h1>
+
+        <div class="dashboard">
+            <div class="card">
+                <h4>Backlog</h4>
+                <p>{{ counts.backlog }} tarefas</p>
+            </div>
+            <div class="card">
+                <h4>A Fazer</h4>
+                <p>{{ counts.todo }} tarefas</p>
+            </div>
+            <div class="card">
+                <h4>Em Progresso</h4>
+                <p>{{ counts.in_progress }} tarefas</p>
+            </div>
+            <div class="card">
+                <h4>Concluídas</h4>
+                <p>{{ counts.done }} tarefas</p>
+            </div>
         </div>
 
-        <!-- Lista de tarefas -->
-        <div class="tasks-container">
-            <h2>Lista de Tarefas</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Título</th>
-                        <th>Descrição</th>
-                        <th>Prazo</th>
-                        <th>Prioridade</th>
-                        <th>Ações</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for task in tasks %}
-                    <tr>
-                        <td>{{ task.title }}</td>
-                        <td>{{ task.description }}</td>
-                        <td>{{ task.due_date }}</td>
-                        <td>{{ task.priority }}</td>
-                        <td>
-                            <a href="{{ url_for('task_detail', task_id=task.id) }}">Ver Detalhes</a>
-                            <form action="/delete/{{ task.id }}" method="GET" style="display:inline;">
-                                <button type="submit">Excluir</button>
-                            </form>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+        <!-- Formulário de nova tarefa -->
+        {% if show_form %}
+        <form action="/add" method="POST">
+            <input type="text" name="title" placeholder="Título" required>
+            <input type="text" name="description" placeholder="Descrição">
+            <input type="date" name="due_date" required>
+            <input type="text" name="priority" placeholder="Prioridade">
+            <select name="status">
+                <option value="backlog">Backlog</option>
+                <option value="todo" selected>A Fazer</option>
+                <option value="in_progress">Em Progresso</option>
+                <option value="done">Concluída</option>
+            </select>
+            <button type="submit">Adicionar Tarefa</button>
+        </form>
+        {% endif %}
+
+        <!-- Quadro Kanban -->
+        <div class="kanban-board">
+            <div class="kanban-column">
+                <h3>Backlog</h3>
+                {% for task in pending_tasks if task.status == 'backlog' %}
+                <div class="task-card">
+                    <strong>{{ task.title }}</strong>
+                    <p>{{ task.description }}</p>
+                    <small>{{ task.due_date|dateformat }}</small><br>
+                    <a href="{{ url_for('task_detail', task_id=task.id) }}">Ver</a>
+                </div>
+                {% endfor %}
+            </div>
+
+            <div class="kanban-column">
+                <h3>A Fazer</h3>
+                {% for task in pending_tasks if task.status == 'todo' %}
+                <div class="task-card">
+                    <strong>{{ task.title }}</strong>
+                    <p>{{ task.description }}</p>
+                    <small>{{ task.due_date|dateformat }}</small><br>
+                    <a href="{{ url_for('task_detail', task_id=task.id) }}">Ver</a>
+                </div>
+                {% endfor %}
+            </div>
+
+            <div class="kanban-column">
+                <h3>Em Progresso</h3>
+                {% for task in pending_tasks if task.status == 'in_progress' %}
+                <div class="task-card">
+                    <strong>{{ task.title }}</strong>
+                    <p>{{ task.description }}</p>
+                    <small>{{ task.due_date|dateformat }}</small><br>
+                    <a href="{{ url_for('task_detail', task_id=task.id) }}">Ver</a>
+                </div>
+                {% endfor %}
+            </div>
+
+            <div class="kanban-column">
+                <h3>Concluídas</h3>
+                {% for task in completed_tasks if task.status == 'done' %}
+                <div class="task-card completed">
+                    <strong>{{ task.title }}</strong>
+                    <p>{{ task.description }}</p>
+                    <small>{{ task.due_date|dateformat }}</small><br>
+                    <a href="{{ url_for('task_detail', task_id=task.id) }}">Ver</a>
+                </div>
+                {% endfor %}
+            </div>
         </div>
     </div>
 </body>
