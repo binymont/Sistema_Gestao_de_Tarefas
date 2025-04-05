@@ -111,3 +111,7 @@ form button:hover {
     background: #f0f0f0;
     color: #888;
 }
+.task-card.completed {
+    background-color: #d4ffd4;
+    border-left: 5px solid #28a745;
+}

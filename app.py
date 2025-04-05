@@ -16,8 +16,10 @@ def dateformat(value, format='%Y-%m-%d'):
 @app.route('/')
 def index():
     tasks = Task.query.all()
-    pending_tasks = [t for t in tasks if not t.completed]
-    completed_tasks = [t for t in tasks if t.completed]
+
+    # Atualização: usa status para exibir concluídas
+    pending_tasks = [t for t in tasks if t.status != 'done']
+    completed_tasks = [t for t in tasks if t.status == 'done']
 
     # Contador por status para o dashboard
     counts = {
@@ -41,15 +43,18 @@ def add_task():
     description = request.form['description']
     due_date_str = request.form['due_date']
     priority = request.form['priority']
-    status = request.form.get('status', 'todo')  # status padrão: 'todo'
+    status = request.form.get('status', 'todo')
 
     due_date = datetime.strptime(due_date_str, '%Y-%m-%d').date()
+    completed = (status == 'done')  # ← sincroniza
+
     new_task = Task(
         title=title,
         description=description,
         due_date=due_date,
         priority=priority,
-        status=status
+        status=status,
+        completed=completed
     )
     db.session.add(new_task)
     db.session.commit()
@@ -67,7 +72,7 @@ def delete_task(id):
     db.session.commit()
     return redirect(url_for('index'))
 
-@app.route('/update/<int:id>', methods=['POST'])
+@app.route('/update/<int:id>,', methods=['POST'])
 def update_task(id):
     task = Task.query.get_or_404(id)
 
@@ -77,6 +82,7 @@ def update_task(id):
     task.due_date = datetime.strptime(due_date_str, '%Y-%m-%d').date()
     task.priority = request.form['priority']
     task.status = request.form['status']
+    task.completed = (task.status == 'done')  # ← sincroniza ao editar
 
     db.session.commit()
     return redirect(url_for('task_detail', task_id=task.id))
@@ -85,6 +91,7 @@ def update_task(id):
 def toggle_complete(id):
     task = Task.query.get_or_404(id)
     task.completed = not task.completed
+    task.status = 'done' if task.completed else 'todo'  # ← sincroniza ao alternar
     db.session.commit()
     return redirect(url_for('index'))
 

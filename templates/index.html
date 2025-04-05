@@ -35,7 +35,6 @@
             </div>
         </div>
 
-        <!-- Formulário de nova tarefa -->
         {% if show_form %}
         <form action="/add" method="POST">
             <input type="text" name="title" placeholder="Título" required>
@@ -92,7 +91,7 @@
 
             <div class="kanban-column">
                 <h3>Concluídas</h3>
-                {% for task in completed_tasks if task.status == 'done' %}
+                {% for task in completed_tasks %}
                 <div class="task-card completed">
                     <strong>{{ task.title }}</strong>
                     <p>{{ task.description }}</p>
