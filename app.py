@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, flash
 from models import db, Task
 from datetime import datetime
 import os
@@ -6,6 +6,7 @@ import os
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///tasks.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.secret_key = 'sua_chave_secreta_aqui'  # Necessário para usar flash messages
 db.init_app(app)
 
 # Filtro customizado para formatar datas no template
@@ -17,11 +18,11 @@ def dateformat(value, format='%Y-%m-%d'):
 def index():
     tasks = Task.query.all()
 
-    # Atualização: usa status para exibir concluídas
+    # Separação de tarefas
     pending_tasks = [t for t in tasks if t.status != 'done']
     completed_tasks = [t for t in tasks if t.status == 'done']
 
-    # Contador por status para o dashboard
+    # Contador por status
     counts = {
         'backlog': sum(1 for t in tasks if t.status == 'backlog'),
         'todo': sum(1 for t in tasks if t.status == 'todo'),
@@ -46,7 +47,7 @@ def add_task():
     status = request.form.get('status', 'todo')
 
     due_date = datetime.strptime(due_date_str, '%Y-%m-%d').date()
-    completed = (status == 'done')  # ← sincroniza
+    completed = (status == 'done')
 
     new_task = Task(
         title=title,
@@ -58,21 +59,24 @@ def add_task():
     )
     db.session.add(new_task)
     db.session.commit()
+    flash('Tarefa adicionada com sucesso!')
     return redirect(url_for('index'))
 
+# Rota para carregar os detalhes da tarefa no modal (template parcial)
 @app.route('/task/<int:task_id>')
 def task_detail(task_id):
     task = Task.query.get_or_404(task_id)
-    return render_template('task_detail.html', task=task)
+    return render_template('task_detail_modal.html', task=task)
 
 @app.route('/delete/<int:id>')
 def delete_task(id):
     task = Task.query.get_or_404(id)
     db.session.delete(task)
     db.session.commit()
+    flash('Tarefa excluída com sucesso!')
     return redirect(url_for('index'))
 
-@app.route('/update/<int:id>,', methods=['POST'])
+@app.route('/update/<int:id>', methods=['POST'])
 def update_task(id):
     task = Task.query.get_or_404(id)
 
@@ -82,17 +86,19 @@ def update_task(id):
     task.due_date = datetime.strptime(due_date_str, '%Y-%m-%d').date()
     task.priority = request.form['priority']
     task.status = request.form['status']
-    task.completed = (task.status == 'done')  # ← sincroniza ao editar
+    task.completed = (task.status == 'done')
 
     db.session.commit()
-    return redirect(url_for('task_detail', task_id=task.id))
+    flash('Tarefa atualizada com sucesso!')
+    return redirect(url_for('index'))
 
 @app.route('/toggle_complete/<int:id>', methods=['POST'])
 def toggle_complete(id):
     task = Task.query.get_or_404(id)
     task.completed = not task.completed
-    task.status = 'done' if task.completed else 'todo'  # ← sincroniza ao alternar
+    task.status = 'done' if task.completed else 'todo'
     db.session.commit()
+    flash('Status da tarefa atualizado!')
     return redirect(url_for('index'))
 
 if __name__ == '__main__':

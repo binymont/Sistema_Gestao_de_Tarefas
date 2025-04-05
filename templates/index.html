@@ -4,11 +4,320 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestão de Tarefas - Kanban</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <!-- Importando a fonte Poppins e o Font Awesome para ícones -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <!-- Você pode usar a versão mais recente do Font Awesome pelo CDN abaixo -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" 
+          integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer" />
+
     <style>
-        button {
-            padding: 8px 16px;
+        /* ---------- RESET BÁSICO ---------- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* ---------- BODY E CONTAINER PRINCIPAL ---------- */
+        body {
+            font-family: 'Poppins', sans-serif, Arial, sans-serif;
+            background: linear-gradient(120deg, #fde2ff 0%, #e2f0ff 100%);
+            color: #333;
+        }
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 40px auto;
+        }
+
+        /* ---------- TÍTULO PRINCIPAL ---------- */
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2rem;
+            color: #9c27b0; /* Roxo mais vivo */
+        }
+
+        /* ---------- DASHBOARD (RESUMO DAS TAREFAS) ---------- */
+        .dashboard {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        .card {
+            background-color: #fff;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 16px;
+            width: 200px;
+            margin: 10px;
+            text-align: center;
+        }
+        .card h4 {
+            color: #9c27b0;
+            margin-bottom: 8px;
+        }
+        .card p {
+            font-size: 1rem;
+            color: #555;
+        }
+
+        /* ---------- FORMULÁRIO DE ADIÇÃO DE TAREFAS ---------- */
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+            justify-content: space-between;
+        }
+        form input[type="text"],
+        form input[type="date"],
+        form select {
+            flex: 1;
+            min-width: 150px;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
             font-size: 14px;
+            outline: none;
+        }
+        form button {
+            background-color: #9c27b0;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            padding: 10px 16px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px; /* espaço entre ícone e texto */
+        }
+        form button:hover {
+            background-color: #7b1fa2;
+        }
+
+        /* ---------- QUADRO KANBAN ---------- */
+        .kanban-board {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+        .kanban-column {
+            flex: 1;
+            min-width: 250px;
+            background-color: #fff;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 16px;
+            margin-bottom: 20px;
+        }
+        .kanban-column h3 {
+            color: #9c27b0;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        /* ---------- CARTÕES DE TAREFAS ---------- */
+        .task-card {
+            background-color: #fdf9ff;
+            border: 1px solid #e7d6ed;
+            border-radius: 6px;
+            padding: 10px;
+            margin-bottom: 10px;
+            position: relative;
+        }
+        .task-card strong {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: #9c27b0;
+        }
+        .task-card p {
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 4px;
+        }
+        .task-card small {
+            font-size: 12px;
+            color: #999;
+        }
+        .task-card.completed {
+            background-color: #e8f5e9; /* Verde clarinho para concluídas */
+            border: 1px solid #c8e6c9;
+        }
+        .task-card a {
+            display: inline-block;
+            margin-top: 6px;
+            text-decoration: none;
+            background-color: #9c27b0;
+            color: #fff;
+            padding: 6px 10px;
+            border-radius: 4px;
+            font-size: 13px;
+            transition: background-color 0.2s;
+            /* Ícone + texto juntos */
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .task-card a:hover {
+            background-color: #7b1fa2;
+        }
+
+        /* ---------- MODAL ---------- */
+        .modal {
+            display: none; /* Oculto inicialmente */
+            position: fixed;
+            z-index: 100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+        }
+        .modal-content {
+            background-color: #fff;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            border-radius: 8px;
+            width: 80%;
+            max-width: 600px;
+            position: relative;
+            animation: slideDown 0.3s ease;
+        }
+        @keyframes slideDown {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .close-modal {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            color: #9c27b0;
+        }
+
+        /* ---------- ESTILIZANDO O CONTEÚDO CARREGADO NO MODAL ---------- */
+        #modalBody {
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        #modalBody h2 {
+            margin-top: 0;
+            color: #9c27b0;
+            text-align: center;
+        }
+        #modalBody .task-info {
+            background-color: #fdf9ff;
+            padding: 15px;
+            border: 1px solid #e7d6ed;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+        #modalBody .task-info p {
+            margin: 6px 0;
+        }
+        #modalBody .task-info strong {
+            color: #9c27b0;
+        }
+
+        /* Formulário dentro do modal (edição de tarefa) */
+        #modalBody form {
+            margin-top: 10px;
+            background-color: #fafafa;
+            padding: 10px;
+            border-radius: 6px;
+        }
+        #modalBody .form-group {
+            margin-bottom: 10px;
+        }
+        #modalBody label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: #9c27b0;
+        }
+        #modalBody input[type="text"],
+        #modalBody input[type="date"],
+        #modalBody select {
+            width: 100%;
+            padding: 8px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        /* Botões dentro do modal */
+        #modalBody .buttons {
+            display: flex;
+            gap: 10px; /* Espaço entre botões */
+            justify-content: flex-end; /* Alinhar à direita */
+            margin-top: 16px;
+        }
+        #modalBody .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            font-weight: 600;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px; /* espaço entre ícone e texto */
+        }
+        #modalBody .btn-update {
+            background-color: #9c27b0;
+        }
+        #modalBody .btn-update:hover {
+            background-color: #7b1fa2;
+        }
+        #modalBody .btn-delete {
+            background-color: #d9534f;
+        }
+        #modalBody .btn-delete:hover {
+            background-color: #c9302c;
+        }
+        #modalBody .btn-back {
+            background-color: #9c27b0;
+            text-decoration: none;
+            padding: 8px 16px;
+            color: #fff;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        #modalBody .btn-back:hover {
+            background-color: #7b1fa2;
+        }
+
+        /* Mensagens de flash, caso apareçam */
+        .flash-message {
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #ffe8f0;
+            border-left: 4px solid #f50057;
+            color: #f50057;
         }
     </style>
 </head>
@@ -36,18 +345,31 @@
         </div>
 
         {% if show_form %}
-        <form action="/add" method="POST">
+        <!-- Formulário de adição de tarefas -->
+        <form action="/add" method="POST" onsubmit="return confirm('Você tem certeza que deseja adicionar esta tarefa?');">
             <input type="text" name="title" placeholder="Título" required>
             <input type="text" name="description" placeholder="Descrição">
             <input type="date" name="due_date" required>
-            <input type="text" name="priority" placeholder="Prioridade">
+
+            <!-- Prioridade como select com opções -->
+            <select name="priority">
+                <option value="alta">Alta</option>
+                <option value="media">Média</option>
+                <option value="baixa">Baixa</option>
+            </select>
+
             <select name="status">
                 <option value="backlog">Backlog</option>
                 <option value="todo" selected>A Fazer</option>
                 <option value="in_progress">Em Progresso</option>
                 <option value="done">Concluída</option>
             </select>
-            <button type="submit">Adicionar Tarefa</button>
+
+            <!-- Botão com ícone -->
+            <button type="submit">
+                <i class="fas fa-plus"></i>
+                Adicionar Tarefa
+            </button>
         </form>
         {% endif %}
 
@@ -60,7 +382,10 @@
                     <strong>{{ task.title }}</strong>
                     <p>{{ task.description }}</p>
                     <small>{{ task.due_date|dateformat }}</small><br>
-                    <a href="{{ url_for('task_detail', task_id=task.id) }}">Ver</a>
+                    <!-- Ícone de olho para "Ver" -->
+                    <a href="javascript:void(0);" onclick="openModal({{ task.id }})">
+                        <i class="fas fa-eye"></i> Ver
+                    </a>
                 </div>
                 {% endfor %}
             </div>
@@ -72,7 +397,9 @@
                     <strong>{{ task.title }}</strong>
                     <p>{{ task.description }}</p>
                     <small>{{ task.due_date|dateformat }}</small><br>
-                    <a href="{{ url_for('task_detail', task_id=task.id) }}">Ver</a>
+                    <a href="javascript:void(0);" onclick="openModal({{ task.id }})">
+                        <i class="fas fa-eye"></i> Ver
+                    </a>
                 </div>
                 {% endfor %}
             </div>
@@ -84,7 +411,9 @@
                     <strong>{{ task.title }}</strong>
                     <p>{{ task.description }}</p>
                     <small>{{ task.due_date|dateformat }}</small><br>
-                    <a href="{{ url_for('task_detail', task_id=task.id) }}">Ver</a>
+                    <a href="javascript:void(0);" onclick="openModal({{ task.id }})">
+                        <i class="fas fa-eye"></i> Ver
+                    </a>
                 </div>
                 {% endfor %}
             </div>
@@ -96,11 +425,49 @@
                     <strong>{{ task.title }}</strong>
                     <p>{{ task.description }}</p>
                     <small>{{ task.due_date|dateformat }}</small><br>
-                    <a href="{{ url_for('task_detail', task_id=task.id) }}">Ver</a>
+                    <a href="javascript:void(0);" onclick="openModal({{ task.id }})">
+                        <i class="fas fa-eye"></i> Ver
+                    </a>
                 </div>
                 {% endfor %}
             </div>
         </div>
     </div>
+
+    <!-- Estrutura do Modal -->
+    <div id="taskModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal()">&times;</span>
+            <div id="modalBody">
+                <!-- Conteúdo dos detalhes da tarefa será carregado aqui via AJAX -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Função para abrir o modal e carregar o conteúdo da tarefa
+        function openModal(taskId) {
+            fetch('/task/' + taskId)
+                .then(response => response.text())
+                .then(html => {
+                    document.getElementById('modalBody').innerHTML = html;
+                    document.getElementById('taskModal').style.display = 'block';
+                })
+                .catch(error => console.error('Erro:', error));
+        }
+
+        // Função para fechar o modal
+        function closeModal() {
+            document.getElementById('taskModal').style.display = 'none';
+        }
+
+        // Fecha o modal ao clicar fora do conteúdo
+        window.onclick = function(event) {
+            const modal = document.getElementById('taskModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+    </script>
 </body>
 </html>
