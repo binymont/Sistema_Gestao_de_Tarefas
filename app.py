@@ -18,6 +18,9 @@ db.init_app(app)
 
 login_manager = LoginManager()
 login_manager.login_view = 'login'
+login_manager.login_message = 'Hello, faça login para continuar 🌸💖'
+login_manager.login_message_category = 'info'
+
 login_manager.init_app(app)
 
 def allowed_file(filename):
@@ -153,7 +156,7 @@ def login():
             login_user(user)
             flash('Hello baby: Seja bem-vindo ao Sistema de Gestão!', 'success')
             return redirect(url_for('index'))
-        flash('OOPS, queridinhooo(a) 💅... essas não são credênciais válidas, tente again!', 'error')
+        flash('PAROOU!, essas não são credênciais válidas, tenta dnv! 🙄💅', 'error')
     return render_template('login.html')
 
 @app.route('/logout', methods=['POST'])
