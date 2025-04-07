@@ -139,8 +139,10 @@ def register():
 
         db.session.add(user)
         db.session.commit()
-        flash('Usuário registrado com sucesso!', 'success')
+        flash(f'Olá, {username}! Fico feliz em saber que vc se cadastrou, acredito que esse sistema irá te ajudar muito com a administração das suas tarefas e fico muito feliz de saber que vou poder ter um pouquinho de participação nisso, faça bom proveito! 💖', 'success')
         return redirect(url_for('login'))
+    else:
+        flash('Bem-vindo(a) User <3\nPara acessar meu primeiro sistema disponibilizado online, vc precisa fazer o cadastro, ok baby?\nVamos lá!', 'info')
     return render_template('register.html')
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -149,16 +151,16 @@ def login():
         user = User.query.filter_by(username=request.form['username']).first()
         if user and user.check_password(request.form['password']):
             login_user(user)
-            flash('Login realizado com sucesso!', 'success')
+            flash('Hello baby: Seja bem-vindo ao Sistema de Gestão!', 'success')
             return redirect(url_for('index'))
-        flash('Credenciais inválidas.', 'error')
+        flash('OOPS, queridinhooo(a) 💅... essas não são credênciais válidas, tente again!', 'error')
     return render_template('login.html')
 
 @app.route('/logout', methods=['POST'])
 @login_required
 def logout():
     logout_user()
-    flash('Você saiu da conta com sucesso!', 'info')
+    flash('Bye, Bye, te vejo em breve! Nos veremos em breve né? 😠', 'info')
     return redirect(url_for('login'))
 
 @app.route('/delete_account', methods=['POST'])
@@ -169,8 +171,8 @@ def delete_account():
     db.session.delete(user)
     db.session.commit()
     logout_user()
-    flash('Conta excluída com sucesso!', 'success')
-    return redirect(url_for('login'))
+    flash('Fico muito triste em saber que vc excluiu a conta, mas vou te direcionar para a tela de registro. Espero que vc mude de ideia, baby! heheh 💕	', 'warning')
+    return redirect(url_for('register'))
 
 @app.route('/upload_profile_pic', methods=['POST'])
 @login_required
