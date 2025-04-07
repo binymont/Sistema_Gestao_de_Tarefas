@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <title>Cadastro de Usuário</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         body {
             background: linear-gradient(120deg, #e1bee7, #bbdefb);
@@ -68,15 +67,10 @@
         <a href="{{ url_for('login') }}">Já tem conta? Entrar</a>
     </form>
 
-    {% with messages = get_flashed_messages() %}
+    {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
             <script>
-                Swal.fire({
-                    icon: 'success',
-                    title: '{{ messages[0] }}',
-                    showConfirmButton: false,
-                    timer: 2000
-                });
+                alert("{{ messages[0][1] }}");
             </script>
         {% endif %}
     {% endwith %}

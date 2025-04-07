@@ -514,7 +514,7 @@
                     <strong>{{ task.title }}</strong>
                     <p>{{ task.description }}</p>
                     <small>{{ task.due_date|dateformat }}</small><br>
-                    <a href="javascript:void(0);" onclick="openModal({{ task.id }})">
+                    <a href="javascript:void(0);" onclick="openModal({{task.id}})">
                         <i class="fas fa-eye"></i> Ver
                     </a>
                 </div>
@@ -588,6 +588,14 @@
     </script>
 
 <script src="{{ url_for('static', filename='scripts/user_menu.js') }}"></script>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <script>
+        alert("{{ messages[0][1] }}");
+        </script>
+    {% endif %}
+    {% endwith %}
+
 
 </body>
 </html>
