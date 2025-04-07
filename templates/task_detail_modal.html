@@ -1,61 +1,106 @@
-<div class="task-info">
-    <h2>Detalhes da Tarefa</h2>
-    <p><strong>Título:</strong> {{ task.title }}</p>
-    <p><strong>Descrição:</strong> {{ task.description }}</p>
-    <p><strong>Prazo:</strong> {{ task.due_date|dateformat }}</p>
-    <p><strong>Prioridade:</strong> {{ task.priority }}</p>
-    <p><strong>Status:</strong> {{ task.status }}</p>
-</div>
+<!-- Container principal -->
+<div class="task-details-container">
 
-<!-- Formulário de atualização -->
-<form action="/update/{{ task.id }}" method="POST" 
-      onsubmit="return confirm('Tem certeza que deseja atualizar esta tarefa?');">
-    <div class="form-group">
-        <label for="title"><i class="fas fa-pen"></i> Título</label>
-        <input type="text" name="title" value="{{ task.title }}" required>
+    <!-- Card de detalhes da tarefa -->
+    <div class="task-details-card">
+      <h2 class="card-title">Detalhes da Tarefa</h2>
+      <div class="card-body">
+        <p><strong>Título:</strong> {{ task.title }}</p>
+        <p><strong>Descrição:</strong> {{ task.description }}</p>
+        <p><strong>Prazo:</strong> {{ task.due_date }}</p>
+        <p><strong>Prioridade:</strong> {{ task.priority }}</p>
+        <p><strong>Status:</strong> {{ task.status }}</p>
+      </div>
     </div>
-    <div class="form-group">
-        <label for="description"><i class="fas fa-align-left"></i> Descrição</label>
-        <input type="text" name="description" value="{{ task.description }}" required>
-    </div>
-    <div class="form-group">
-        <label for="due_date"><i class="fas fa-calendar-alt"></i> Prazo</label>
-        <input type="date" name="due_date" value="{{ task.due_date|dateformat }}" required>
-    </div>
-    <div class="form-group">
-        <label for="priority"><i class="fas fa-exclamation-circle"></i> Prioridade</label>
-        <select name="priority" required>
-            <option value="alta" {% if task.priority == 'alta' %}selected{% endif %}>Alta</option>
-            <option value="media" {% if task.priority == 'media' %}selected{% endif %}>Média</option>
-            <option value="baixa" {% if task.priority == 'baixa' %}selected{% endif %}>Baixa</option>
-        </select>
-    </div>
-    <div class="form-group">
-        <label for="status"><i class="fas fa-tasks"></i> Status</label>
-        <select name="status" required>
-            <option value="backlog" {% if task.status == 'backlog' %}selected{% endif %}>Backlog</option>
-            <option value="todo" {% if task.status == 'todo' %}selected{% endif %}>A Fazer</option>
+  
+    <!-- Card do formulário de atualização -->
+    <div class="task-form-card">
+      <h3 class="card-title">Atualizar Tarefa</h3>
+      <form action="/update/{{ task.id }}" method="POST" class="task-form">
+        <!-- Campo Título -->
+        <div class="form-group">
+          <label for="title">Título</label>
+          <input 
+            type="text" 
+            name="title" 
+            value="{{ task.title }}" 
+            class="form-control" 
+            required 
+          />
+        </div>
+  
+        <!-- Campo Descrição -->
+        <div class="form-group">
+          <label for="description">Descrição</label>
+          <textarea 
+            name="description" 
+            rows="3" 
+            class="form-control" 
+            required
+          >{{ task.description }}</textarea>
+        </div>
+  
+        <!-- Campo Prazo -->
+        <div class="form-group">
+          <label for="due_date">Prazo</label>
+          <input 
+            type="date" 
+            name="due_date" 
+            value="{{ task.due_date }}" 
+            class="form-control" 
+            required 
+          />
+        </div>
+  
+        <!-- Campo Prioridade -->
+        <div class="form-group">
+          <label for="priority">Prioridade</label>
+          <select 
+            name="priority" 
+            class="form-control" 
+            required
+          >
+            <option value="baixa"  {% if task.priority == 'baixa'  %}selected{% endif %}>Baixa</option>
+            <option value="média"  {% if task.priority == 'média'  %}selected{% endif %}>Média</option>
+            <option value="alta"   {% if task.priority == 'alta'   %}selected{% endif %}>Alta</option>
+            <option value="urgente" {% if task.priority == 'urgente' %}selected{% endif %}>Urgente</option>
+          </select>
+        </div>
+  
+        <!-- Campo Status -->
+        <div class="form-group">
+          <label for="status">Status</label>
+          <select 
+            name="status" 
+            class="form-control" 
+            required
+          >
+            <option value="backlog"     {% if task.status == 'backlog' %}selected{% endif %}>Backlog</option>
+            <option value="todo"        {% if task.status == 'todo' %}selected{% endif %}>A Fazer</option>
             <option value="in_progress" {% if task.status == 'in_progress' %}selected{% endif %}>Em Progresso</option>
-            <option value="done" {% if task.status == 'done' %}selected{% endif %}>Concluída</option>
-        </select>
-    </div>
-
-    <div class="buttons">
-        <button type="submit" class="btn btn-update">
-            <i class="fas fa-save"></i> Atualizar
+            <option value="done"        {% if task.status == 'done' %}selected{% endif %}>Concluída</option>
+          </select>
+        </div>
+  
+        <!-- Botões de ação -->
+        <div class="form-buttons">
+          <button type="submit" class="btn btn-primary">
+            Atualizar
+          </button>
+        </div>
+      </form>
+  
+      <!-- Formulário de exclusão -->
+      <form 
+        action="/delete/{{ task.id }}" 
+        method="GET" 
+        class="delete-form"
+      >
+        <button type="submit" class="btn btn-danger">
+          Excluir
         </button>
+      </form>
     </div>
-</form>
-
-<!-- Botão para excluir -->
-<form action="/delete/{{ task.id }}" method="GET" style="margin-top: 10px;"
-      onsubmit="return confirm('Tem certeza que deseja excluir esta tarefa?');">
-    <button type="submit" class="btn btn-delete">
-        <i class="fas fa-trash"></i> Excluir
-    </button>
-</form>
-
-<!-- Botão para fechar o modal -->
-<a href="#" class="btn-back" onclick="closeModal()">
-    <i class="fas fa-times"></i> Fechar
-</a>
+  
+  </div>
+  

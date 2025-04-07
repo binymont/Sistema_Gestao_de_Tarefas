@@ -13,6 +13,95 @@
 
     <style>
         /* ---------- RESET BÁSICO ---------- */
+
+         .user-icon {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        .profile-pic {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #9c27b0;
+        }
+
+        #fotoInput {
+            display: none;
+        }
+
+        .upload-btn {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 10px;
+            font-size: 14px;
+            color: #333;
+            border-radius: 6px;
+        }
+
+        .upload-btn:hover {
+            background-color: #f3e5f5;
+        }
+
+
+        .user-menu {
+        position: absolute;
+        top: 20px;
+        right: 30px;
+        z-index: 10;
+    }
+
+    .user-icon {
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 20px;
+        color: #333;
+    }
+
+    .dropdown-menu {
+        display: none;
+        position: absolute;
+        top: 40px;
+        right: 0;
+        background-color: white;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+        padding: 10px;
+        min-width: 180px;
+    }
+
+    .dropdown-menu form,
+    .dropdown-menu button {
+        width: 100%;
+    }
+
+    .dropdown-menu button {
+        background: none;
+        border: none;
+        color: #333;
+        padding: 8px 10px;
+        text-align: left;
+        font-size: 14px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        border-radius: 6px;
+        transition: background 0.2s;
+    }
+
+    .dropdown-menu button:hover {
+        background-color: #f3e5f5;
+    }
+
         * {
             margin: 0;
             padding: 0;
@@ -322,6 +411,34 @@
     </style>
 </head>
 <body>
+    <div class="user-menu">
+        <div class="user-icon" onclick="toggleMenu()">
+            <img src="{{ url_for('static', filename='uploads/profile_pics/user_' ~ user.id ~ '.png') }}"
+                 onerror="this.src='https://cdn-icons-png.flaticon.com/512/149/149071.png'" 
+                 alt="Foto de Perfil" class="profile-pic">
+            <i class="fas fa-ellipsis-v"></i>
+        </div>
+    
+        <div class="dropdown-menu" id="dropdownMenu">
+            <form action="/logout" method="POST">
+                <button type="submit"><i class="fas fa-sign-out-alt"></i> Sair</button>
+            </form>
+            
+            <form action="/delete_account" method="POST" onsubmit="return confirm('Tem certeza que deseja excluir sua conta?');">
+                <button type="submit"><i class="fas fa-user-times"></i> Excluir Conta</button>
+            </form>
+            
+    
+            <form action="/upload_profile_pic" method="POST" enctype="multipart/form-data">
+                <label for="fotoInput" class="upload-btn">
+                    <i class="fas fa-image"></i> Escolher Foto
+                </label>
+                <input type="file" id="fotoInput" name="profile_pic" onchange="this.form.submit()">
+            </form>
+        </div>
+    </div>
+    
+    
     <div class="container">
         <h1>Quadro de Tarefas</h1>
 
@@ -469,5 +586,8 @@
             }
         }
     </script>
+
+<script src="{{ url_for('static', filename='scripts/user_menu.js') }}"></script>
+
 </body>
 </html>
