@@ -171,7 +171,7 @@ def delete_account():
     db.session.delete(user)
     db.session.commit()
     logout_user()
-    flash('Fico muito triste em saber que vc excluiu a conta, mas vou te direcionar para a tela de registro. Espero que vc mude de ideia, baby! heheh 💕	', 'warning')
+    flash('Fico muito triste em saber que vc excluiu a conta, mas vou te direcionar para a tela de registro. Espero que vc mude de ideia, Pequeno gafanhoto! heheh 💕', 'warning')
     return redirect(url_for('register'))
 
 @app.route('/upload_profile_pic', methods=['POST'])
