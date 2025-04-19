@@ -1,271 +1,194 @@
-@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap');
-
+/* ===== Global ===== */
 body {
-    font-family: 'Quicksand', sans-serif;
+    position: relative;
     margin: 0;
-    padding: 40px 20px;
-    background: linear-gradient(135deg, #ffe6f0, #e0bbf9, #1a1a1a);
-    background-size: 400% 400%;
-    animation: gradientAnimation 20s ease infinite;
-    color: #4a004a;
-}
-
-@keyframes gradientAnimation {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-}
-
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
-}
-
-/* Títulos gerais */
-h1 {
-    text-align: center;
-    color: #c91e9e;
-    margin-bottom: 30px;
-}
-
-/* Dashboard */
-.dashboard {
+    height: 100vh;
     display: flex;
-    justify-content: space-between;
-    gap: 20px;
-    margin-bottom: 40px;
-}
-
-/* Card padrão */
-.card {
-    flex: 1;
-    background-color: rgba(255, 255, 255, 0.9);
-    padding: 20px;
-    border-radius: 12px;
-    text-align: center;
-    box-shadow: 0 0 10px rgba(201, 30, 158, 0.2);
-}
-
-/* Estilo de formulários */
-form {
-    background: rgba(255, 255, 255, 0.95);
-    padding: 25px;
-    border-radius: 12px;
-    box-shadow: 0 0 10px rgba(201, 30, 158, 0.2);
-    margin-bottom: 40px;
-}
-
-form input,
-form select,
-form button {
-    width: 100%;
-    padding: 12px;
-    margin: 10px 0;
-    border-radius: 8px;
-    border: 1px solid #ffb6f5;
-    font-size: 14px;
-}
-
-/* Botão padrão do form */
-form button {
-    background-color: #ff70e6;
-    color: white;
-    font-weight: bold;
-    border: none;
-    transition: background-color 0.3s ease;
-    cursor: pointer;
-}
-
-form button:hover {
-    background-color: #e356c9;
-}
-
-/* Kanban */
-.kanban-board {
-    display: flex;
-    gap: 20px;
-    justify-content: space-between;
-    align-items: flex-start;
-}
-
-.kanban-column {
-    flex: 1;
-    background: rgba(255, 255, 255, 0.95);
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 0 10px rgba(201, 30, 158, 0.2);
-}
-
-.kanban-column h3 {
-    text-align: center;
-    color: #c91e9e;
-    margin-bottom: 15px;
-}
-
-.task-card {
-    background: #fff0fa;
-    border: 1px solid #ffb6f5;
-    border-radius: 10px;
-    padding: 12px;
-    margin-bottom: 15px;
-    box-shadow: 0 2px 4px rgba(255, 112, 230, 0.15);
-}
-
-.task-card.completed {
-    opacity: 0.6;
-    text-decoration: line-through;
-    background: #f0f0f0;
-    color: #888;
-}
-.task-card.completed {
-    background-color: #d4ffd4;
-    border-left: 5px solid #28a745;
-}
-
-/* ========================= */
-/* Novos estilos para o modal */
-/* ========================= */
-
-/* Container dos cards de detalhes e formulário */
-.task-details-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    margin: 20px auto;
-    max-width: 900px;
+    align-items: center;
     justify-content: center;
-}
-
-/* Card de detalhes e card do formulário */
-.task-details-card,
-.task-form-card {
-    flex: 1;
-    background-color: rgba(255, 255, 255, 0.95);
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 0 10px rgba(201, 30, 158, 0.2);
-    min-width: 280px;
-}
-
-/* Títulos dos cards */
-.card-title {
-    font-size: 1.25rem;
-    font-weight: 600;
-    color: #c91e9e;
-    margin-bottom: 15px;
+    /* degradê rosa suave */
+    background: linear-gradient(135deg, #ffe4e1 0%, #ffb6c1 100%);
+    overflow: hidden;
+    font-family: 'Poppins', sans-serif;
+    background-size: 200% 200%;
+    animation: gradientMove 10s ease infinite;
+  }
+  
+  /* camada de glitter com pontinhos brilhantes */
+  body::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    background-image:
+      radial-gradient(circle, rgba(255,255,255,0.8) 1px, transparent 1px),
+      radial-gradient(circle, rgba(255,255,255,0.8) 1px, transparent 1px);
+    background-size: 25px 25px;
+    background-position: 0 0, 12.5px 12.5px;
+    animation: glitter 3s linear infinite;
+  }
+  
+  /* animação do degradê */
+  @keyframes gradientMove {
+    0%   { background-position: 0%   50%; }
+    50%  { background-position: 100% 50%; }
+    100% { background-position: 0%   50%; }
+  }
+  
+  /* animação do glitter */
+  @keyframes glitter {
+    0%   { opacity: 0.4; transform: translate(0,0); }
+    50%  { opacity: 0.8; }
+    100% { opacity: 0.4; transform: translate(12px,12px); }
+  }
+  
+  /* ===== Container do Form ===== */
+  .form-container {
+    position: relative;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 40px 50px;
+    border-radius: 16px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
     text-align: center;
-}
-
-/* Corpo do card de detalhes */
-.card-body p {
-    margin: 8px 0;
-    text-align: left;
-}
-
-/* Estilo do formulário interno */
-.task-form {
-    display: flex;
-    flex-direction: column;
-}
-
-/* Agrupamento dos campos */
-.form-group {
-    margin-bottom: 15px;
-}
-
-.form-group label {
+    width: 360px;
+    z-index: 1; /* acima do glitter */
+  }
+  
+  /* ===== Título ===== */
+  .form-container h2 {
+    font-size: 1.8rem;
+    color: #d81b60;
+    margin-bottom: 24px;
+    position: relative;
+  }
+  .form-container h2::before {
+    content: "🦋";
+    position: absolute;
+    left: -1.5em;
+    top: 0;
+    animation: flap 1.5s infinite ease-in-out;
+  }
+  .form-container h2::after {
+    content: "✨";
+    position: absolute;
+    right: -1.2em;
+    top: 0;
+    animation: sparkle 2s infinite ease-in-out;
+  }
+  
+  /* ===== Inputs ===== */
+  .form-container label {
     display: block;
-    margin-bottom: 5px;
-    font-weight: 600;
-    color: #4a004a;
-}
-
-/* Controles dos formulários */
-.form-control {
+    text-align: left;
+    margin-bottom: 6px;
+    font-weight: 500;
+    color: #444;
+  }
+  .form-container input {
     width: 100%;
     padding: 12px;
+    margin-bottom: 20px;
+    border: 2px solid #ddd;
     border-radius: 8px;
-    border: 1px solid #ffb6f5;
-    font-size: 14px;
-    box-sizing: border-box;
-}
-
-/* Botões do formulário */
-.form-buttons {
-    display: flex;
-    justify-content: space-between;
-    gap: 10px;
-    margin-top: 10px;
-}
-
-/* Botões customizados */
-.btn {
-    cursor: pointer;
-    border: none;
-    padding: 10px 16px;
-    border-radius: 8px;
-    font-size: 14px;
-    transition: background-color 0.3s ease;
-    text-align: center;
-    font-weight: bold;
-    text-decoration: none;
-}
-
-.btn-primary {
-    background-color: #a349e5;
-    color: #fff;
-}
-
-.btn-primary:hover {
-    background-color: #902bd0;
-}
-
-.btn-danger {
-    background-color: #dc3545;
-    color: #fff;
-}
-
-.btn-danger:hover {
-    background-color: #c82333;
-}
-
-/* Formulário de exclusão */
-.delete-form {
-    margin-top: 10px;
-    text-align: center;
-}
-
-/* Responsividade para telas menores */
-@media (max-width: 768px) {
-    .task-details-container {
-        flex-direction: column;
-        align-items: stretch;
-    }
-
-    .form-buttons {
-        flex-direction: column;
-        align-items: stretch;
-    }
-}
-
-/* NOVO LAYOUT DO FORMULÁRIO DE ATUALIZAÇÃO */
-.task-form-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-.form-row {
-    display: flex;
-    gap: 20px;
-    flex-wrap: wrap;
-}
-
-.form-row .form-group {
-    flex: 1;
-    min-width: 200px;
-}
-
-.full-width {
+    font-size: 1rem;
+    transition: border-color .3s;
+  }
+  .form-container input:focus {
+    border-color: #d81b60;
+    outline: none;
+  }
+  
+  /* ===== Botão ===== */
+  .form-container button {
     width: 100%;
-}
+    padding: 14px;
+    font-size: 1.1rem;
+    color: #fff;
+    background: #d81b60;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background .3s, transform .2s;
+  }
+  .form-container button:hover {
+    background: #ad1457;
+    transform: translateY(-2px);
+  }
+  
+  /* ===== Links de rodapé ===== */
+  .links {
+    margin-top: 16px;
+    font-size: 0.9rem;
+  }
+  .links a {
+    color: #777;
+    text-decoration: none;
+    margin: 0 8px;
+    transition: color .3s;
+  }
+  .links a:hover {
+    color: #d81b60;
+  }
+  
+  /* ===== Flash message ===== */
+  .flash {
+    position: absolute;
+    top: -40px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #fff3e0;
+    padding: 8px 16px;
+    border-radius: 6px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    color: #bf360c;
+    font-size: 0.9rem;
+  }
+  
+  /* ===== Animações internas ===== */
+  @keyframes flap {
+    0%,100% { transform: rotate(0deg); }
+    50%     { transform: rotate(20deg); }
+  }
+  @keyframes sparkle {
+    0%,100% { opacity: 0.3; transform: scale(0.6); }
+    50%     { opacity: 1;   transform: scale(1.2); }
+  }
+
+  /* Toast container */
+#toast-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+  }
+  
+  /* Toast básico */
+  .toast {
+    min-width: 250px;
+    margin-bottom: 10px;
+    padding: 12px 20px;
+    border-radius: 8px;
+    color: #fff;
+    font-family: 'Poppins', sans-serif;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    opacity: 0;
+    transform: translateY(-20px);
+    animation: fadeInOut 4s forwards;
+  }
+  
+  /* Cores por categoria */
+  .toast.success { background: #4caf50; }  /* verde */
+  .toast.error   { background: #f44336; }  /* vermelho */
+  .toast.info    { background: #2196f3; }  /* azul */
+  .toast.warning { background: #ff9800; }  /* laranja */
+  
+  /* Animação: entra, segura, sai */
+  @keyframes fadeInOut {
+    0%   { opacity: 0; transform: translateY(-20px); }
+    10%  { opacity: 1; transform: translateY(0); }
+    85%  { opacity: 1; transform: translateY(0); }
+    100% { opacity: 0; transform: translateY(-20px); }
+  }
+  
+  
