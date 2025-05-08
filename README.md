@@ -1,9 +1,5 @@
 #   Sistema de Gestão de Tarefas - Grupo 9
 
-[![Status   do Projeto](https://img.shields.io/badge/status-em_desenvolvimento-yellow)](https://github.com/seu-usuario/seu-repositorio)
-[![Licença](https://img.shields.io/badge/licença-MIT-green)](https://opensource.org/licenses/MIT)
-[![Linguagens](https://img.shields.io/github/languages/count/seu-usuario/seu-repositorio)](https://github.com/seu-usuario/seu-repositorio)
-
 Este é um sistema web para gerenciamento de tarefas, criado com o objetivo de organizar atividades de forma simples e eficiente.
 
 ##   Visão Geral
