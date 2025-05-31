@@ -12,7 +12,8 @@ Verificar se o sistema permite o cadastro de novos usuários.
 Usuário cadastrado com sucesso e redirecionado para a página inicial.
 
 **Evidência:**  
-![Print Cadastro de Usuário](static/print/print1.png)
+
+![Print Cadastro de Usuário](print1.png)
 
 ---
 
@@ -32,7 +33,7 @@ Nova tarefa criada e exibida na coluna "A Fazer".
 
 
 **Evidência:**  
-![Print Criação de Tarefa](static/print/print2.png)
+![Print Criação de Tarefa](print2.png)
 
 ---
 
@@ -50,7 +51,7 @@ Verificar se o sistema permite mover tarefas entre as colunas.
 A tarefa é movida corretamente entre as colunas.
 
 **Evidência:**  
-![Print Movimentação de Tarefa](static/print/print3.png)
+![Print Movimentação de Tarefa](print3.png)
 
 ---
 
@@ -68,7 +69,7 @@ A tarefa é movida para a coluna "Concluído" e removida das outras colunas.
 
 
 **Evidência:**  
-![Print Conclusão de Tarefa](static/print/print3.png)
+![Print Conclusão de Tarefa](print3.png)
 
 ---
 
@@ -87,7 +88,7 @@ As alterações são salvas e exibidas corretamente.
 
 
 **Evidência:**  
-![Print Edição de Tarefa](static/print/print5.png)
+![Print Edição de Tarefa](print5.png)
 
 ---
 
@@ -105,4 +106,4 @@ A tarefa é removida do sistema.
 
 
 **Evidência:**  
-![Print Exclusão de Tarefa](static/print/print6.png)
+![Print Exclusão de Tarefa](print6.png)
